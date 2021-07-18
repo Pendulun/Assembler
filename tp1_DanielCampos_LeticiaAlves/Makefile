@@ -7,7 +7,7 @@ EXT = cpp
 # TODO: altere a lista de forma que contenha todos os arquivos .cpp
 #       do seu projeto (sem a extensão), que deve estar no diretório 
 #       src/
-SRCS_MONTADOR = $(patsubst %,%.$(EXT),main montador)
+SRCS_MONTADOR = $(patsubst %,%.$(EXT),main Montador)
 OBJS_MONTADOR = $(patsubst %,build/%.o,$(basename $(SRCS_MONTADOR)))
 
 ###############################################################################
@@ -24,16 +24,16 @@ CPPFLAGS = -Iinclude/
 ################################ Executáveis ##################################
 ###############################################################################
 
-all: bin/montador
+all: bin/Montador
 
 ifeq ($(EXT), c)
-bin/montador: $(OBJS_MONTADOR)
+bin/Montador: $(OBJS_MONTADOR)
 	@echo "+ Compilando programa \"$@\""
-	@$(CC) $(CCFLAGS) $(OBJS_MONTADOR) -o bin/montador
+	@$(CC) $(CCFLAGS) $(OBJS_MONTADOR) -o bin/Montador
 else
-bin/montador: $(OBJS_MONTADOR)
+bin/Montador: $(OBJS_MONTADOR)
 	@echo "+ Compilando programa \"$@\""
-	@$(CXX) $(CXXFLAGS) $(OBJS_MONTADOR) -o bin/montador
+	@$(CXX) $(CXXFLAGS) $(OBJS_MONTADOR) -o bin/Montador
 endif
 
 ###############################################################################
