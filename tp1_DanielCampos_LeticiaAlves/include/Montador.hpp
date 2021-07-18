@@ -12,7 +12,7 @@ class Montador{
         Montador();
         ~Montador();
 
-        void montar(std::ifstream& entrada);
+        void montar(std::ifstream& entrada, std::ofstream& saida);
 };
 
 
