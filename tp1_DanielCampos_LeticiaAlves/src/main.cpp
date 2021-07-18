@@ -11,10 +11,11 @@ int main(int argc, char *argv[]) {
 
         if (entrada.is_open() && saida.is_open()){
 
-            Montador montador;      
-            montador.montar(entrada, saida);
+            Montador montador(entrada, saida);      
+            montador.montar();
 
             entrada.close();
+            saida.close();
         }
         else{
         std::cout<<"Nao foi possivel abrir o arquivo.\n";

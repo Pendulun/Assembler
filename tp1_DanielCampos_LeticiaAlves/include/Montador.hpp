@@ -3,16 +3,22 @@
 
 #include <iostream>
 #include <fstream>
+#include <string>
 
 // TODO: structs, classes, e outras definições.
 class Montador{
     private:
-        /* data */
+        std::ifstream* entrada;
+        std::ofstream* saida;
+        unsigned int LC;
+
+        void passo1();
+        void passo2();
     public:
-        Montador();
+        Montador(std::ifstream& entrada, std::ofstream& saida);
         ~Montador();
 
-        void montar(std::ifstream& entrada, std::ofstream& saida);
+        void montar();
 };
 
 
