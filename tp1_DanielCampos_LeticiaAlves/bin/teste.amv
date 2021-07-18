@@ -1,2 +1,7 @@
-Momo: READ
-Pincipe: LOAD R1 const100    ; Carrega o inteiro 100 e armazena no
+READ R0
+LOAD R1 const100
+ADD R0 R1
+WRITE R0
+HALT
+const100: WORD 100
+END

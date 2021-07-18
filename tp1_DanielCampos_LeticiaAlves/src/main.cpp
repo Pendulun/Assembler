@@ -4,7 +4,7 @@ int main(int argc, char *argv[]) {
 
     // TODO: executar o montador...
     std::ifstream entrada = std::ifstream();
-    std::ofstream saida = std::ofstream("saida.mv", std::ios::out);
+    std::ofstream saida = std::ofstream("saida.mv");
 
     if (argc > 1){
         entrada.open(argv[1]);

@@ -12,8 +12,10 @@ Montador::~Montador(){
 }
 
 void Montador::montar(){
-    std::cout<<"Entrou no montar!\n";
-    *saida<<"MV-EXE"<<std::endl;
+    //std::cout<<"Entrou no montar!\n";
+    *saida<<"MV-EXE\n\n";
+    //*saida<<std::endl;
+    //*saida<<std::endl;
 
     this->passo1();
 }
@@ -83,8 +85,8 @@ std::string Montador::getOperacao(std::string& instrucao){
         }
     }
 
-    operador = instrucao.substr(inicio, fim);
-    instrucao.erase(inicio, fim);
+    operador = instrucao.substr(inicio, fim+1);
+    instrucao.erase(inicio, fim+1);
 
     return operador;
 }
@@ -120,20 +122,30 @@ std::string Montador::getOperando(std::string& instrucao){
     return operando;
 }
 
+int Montador::getRegistrador(std::string registrador){
+    return std::stoi(registrador.substr(1,1));
+}
+
 void Montador::passo1(){
-    this->LC = 0;
+    this->PC = 0;
     std::string instrucao;
     std::string label;
     std::string opcode;
     int operando1 = 0;
-    int operando2 = 0;
+    //int operando2 = 0;
 
     while(!this->entrada->eof()){
         std::getline(*this->entrada, instrucao);        
 
         instrucao = removeComentario(instrucao);
+        std::cout<<"A instrucao sem comentarios eh "<<instrucao<<std::endl;
+
         label = getLabel(instrucao);
+        std::cout<<"O label eh "<<label<<std::endl;
+
         opcode = getOperacao(instrucao);
+        std::cout<<"A operacao eh "<<opcode<<std::endl;
+        std::cout<<"\n";
 
         //PSEUDO
         if(opcode.compare("WORD")==0){
@@ -141,14 +153,34 @@ void Montador::passo1(){
             this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, operando1));
         }
         else if(opcode.compare("END")==0){
+
+        /*for(auto elem : this->tabelaDeSimbolos){
+            std::cout<<elem.first<<" "<<elem.second<<"\n";
+        }*/
+
             passo2();
+            break;
         }
         //INSTRUCOES TABELADAS
         else if(opcode.compare("HALT")==0){
-
+            //Parada
+            //this->PC++; NÃO SEI...
         } 
-        else if(opcode.compare("LOAD")==0){
-
+        else{
+            if(label.compare("") != 0){
+                this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, this->PC));
+            }
+            this->PC++; //Por enquanto, na verdade LC = LC + tamanhoDaInstrucao
+        }
+        
+        /*if(opcode.compare("LOAD")==0){
+            //Carrega Registrador 
+            //operando1 = getRegistrador(getOperando(instrucao));
+            //operando2 = std::stoi(getOperando(instrucao));
+            if(label.compare("") != 0){
+                this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, this->PC));
+            }
+            this->PC++; //Por enquanto
         } 
         else if(opcode.compare("STORE")==0){
 
@@ -206,8 +238,12 @@ void Montador::passo1(){
         }  
         else if(opcode.compare("RET")==0){
 
-        }    
-    }   
+        }
+        else{
+            std::cout<<"Instrucao nao encontrada.\n";
+        }*/ 
+    }  
+    *saida<<"tamanhoDoPrograma"<<" "<<"EnderecoDeCarregamento"<<" "<<"valorInicialDaPilha"<<" "<<"entryPointDoPrograma"<<"\n\n";
 }
 void Montador::passo2(){
 

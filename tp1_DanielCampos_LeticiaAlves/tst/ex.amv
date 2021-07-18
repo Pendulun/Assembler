@@ -1,3 +1,9 @@
+
+
+
+; ACHO QUE VAI TER QUE TRATAR DE FORMA MAIS EFICIENTE ISSO DE IGNORAR ESSE MONTE DE ; ABAIXO...
+; TAMBÉM OS \n...
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;; Programa que lê um inteiro "x" e imprime x + 100 ;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
