@@ -84,8 +84,40 @@ std::string Montador::getOperacao(std::string& instrucao){
     }
 
     operador = instrucao.substr(inicio, fim);
+    instrucao.erase(inicio, fim);
 
     return operador;
+}
+
+std::string Montador::getOperando(std::string& instrucao){
+    std::string operando = "";
+
+    int inicio = -1;
+    int fim = -1;
+
+    for (unsigned int i=0; i<instrucao.length(); i++){
+        if (instrucao[i] != ' '){
+            inicio = i;
+
+            break;    
+        }
+    }
+
+    for (unsigned int i=inicio; i<instrucao.length(); i++){
+        if (i == instrucao.length()-1){
+            fim = i;
+            break;
+        }
+        if (instrucao[i+1] == ' '){
+            fim = i;
+            break;    
+        }
+    }
+
+    operando = instrucao.substr(inicio, fim);
+    instrucao.erase(inicio, fim);
+
+    return operando;
 }
 
 void Montador::passo1(){
@@ -93,6 +125,8 @@ void Montador::passo1(){
     std::string instrucao;
     std::string label;
     std::string opcode;
+    int operando1 = 0;
+    int operando2 = 0;
 
     while(!this->entrada->eof()){
         std::getline(*this->entrada, instrucao);        
@@ -101,6 +135,78 @@ void Montador::passo1(){
         label = getLabel(instrucao);
         opcode = getOperacao(instrucao);
 
+        //PSEUDO
+        if(opcode.compare("WORD")==0){
+            operando1 = std::stoi(getOperando(instrucao));
+            this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, operando1));
+        }
+        else if(opcode.compare("END")==0){
+            passo2();
+        }
+        //INSTRUCOES TABELADAS
+        else if(opcode.compare("HALT")==0){
+
+        } 
+        else if(opcode.compare("LOAD")==0){
+
+        } 
+        else if(opcode.compare("STORE")==0){
+
+        } 
+        else if(opcode.compare("READ")==0){
+
+        } 
+        else if(opcode.compare("WRITE")==0){
+
+        } 
+        else if(opcode.compare("COPY")==0){
+
+        } 
+        else if(opcode.compare("PUSH")==0){
+
+        } 
+        else if(opcode.compare("POP")==0){
+
+        } 
+        else if(opcode.compare("ADD")==0){
+
+        } 
+        else if(opcode.compare("SUB")==0){
+
+        }  
+        else if(opcode.compare("MUL")==0){
+
+        } 
+        else if(opcode.compare("DIV")==0){
+
+        } 
+        else if(opcode.compare("MOD")==0){
+
+        } 
+        else if(opcode.compare("AND")==0){
+
+        } 
+        else if(opcode.compare("OR")==0){
+
+        } 
+        else if(opcode.compare("NOT")==0){
+
+        } 
+        else if(opcode.compare("JUMP")==0){
+
+        } 
+        else if(opcode.compare("JZ")==0){
+
+        } 
+        else if(opcode.compare("JN")==0){
+
+        } 
+        else if(opcode.compare("CALL")==0){
+
+        }  
+        else if(opcode.compare("RET")==0){
+
+        }    
     }   
 }
 void Montador::passo2(){

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <map>
 
 // TODO: structs, classes, e outras definições.
 class Montador{
@@ -11,10 +12,12 @@ class Montador{
         std::ifstream* entrada;
         std::ofstream* saida;
         unsigned int LC;
+        std::map<std::string, int> tabelaDeSimbolos;
 
         std::string removeComentario(std::string instrucao);
         std::string getLabel(std::string& instrucao);
         std::string getOperacao(std::string& instrucao);
+        std::string getOperando(std::string& instrucao);
 
         void passo1();
         void passo2();
