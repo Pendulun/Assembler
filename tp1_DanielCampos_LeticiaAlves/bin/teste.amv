@@ -1,2 +1,2 @@
-READ R0             ; Lê o inteiro x e armazena no registrador 0
-LOAD R1 const100    ; Carrega o inteiro 100 e armazena no
+Momo: READ
+Pincipe: LOAD R1 const100    ; Carrega o inteiro 100 e armazena no

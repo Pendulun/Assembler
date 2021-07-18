@@ -12,6 +12,10 @@ class Montador{
         std::ofstream* saida;
         unsigned int LC;
 
+        std::string removeComentario(std::string instrucao);
+        std::string getLabel(std::string& instrucao);
+        std::string getOperacao(std::string& instrucao);
+
         void passo1();
         void passo2();
     public:
