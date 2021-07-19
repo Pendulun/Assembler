@@ -126,8 +126,14 @@ int Montador::getRegistrador(std::string registrador){
     return std::stoi(registrador.substr(1,1));
 }
 
+void Montador::inserirNaTabelaDeSimbolos(std::string label){
+    if(label.compare("") != 0){
+        this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, this->LC));
+    }
+}
+
 void Montador::passo1(){
-    this->PC = 0;
+    this->LC = 0;
     std::string instrucao;
     std::string label;
     std::string opcode;
@@ -161,87 +167,83 @@ void Montador::passo1(){
             passo2();
             break;
         }
-        //INSTRUCOES TABELADAS
-        else if(opcode.compare("HALT")==0){
-            //Parada
-            //this->PC++; NÃO SEI...
-        } 
         else{
-            if(label.compare("") != 0){
-                this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, this->PC));
+
+            //INSTRUCOES TABELADAS
+            this->inserirNaTabelaDeSimbolos(label);
+
+            if(opcode.compare("HALT")==0){
+                //Parada
+                this->LC++;
+            } 
+            else if(opcode.compare("LOAD")==0){
+                //Carrega Registrador 
+                //operando1 = getRegistrador(getOperando(instrucao));
+                //operando2 = std::stoi(getOperando(instrucao));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("STORE")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("READ")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("WRITE")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("COPY")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("PUSH")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("POP")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("ADD")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("SUB")==0){
+                this->LC += 3;
+            }  
+            else if(opcode.compare("MUL")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("DIV")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("MOD")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("AND")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("OR")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("NOT")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JUMP")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JZ")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JN")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("CALL")==0){
+                this->LC += 2;
+            }  
+            else if(opcode.compare("RET")==0){
+                this->LC++;
             }
-            this->PC++; //Por enquanto, na verdade LC = LC + tamanhoDaInstrucao
-        }
-        
-        /*if(opcode.compare("LOAD")==0){
-            //Carrega Registrador 
-            //operando1 = getRegistrador(getOperando(instrucao));
-            //operando2 = std::stoi(getOperando(instrucao));
-            if(label.compare("") != 0){
-                this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, this->PC));
+            else{
+                std::cout<<"Instrucao nao encontrada.\n";
             }
-            this->PC++; //Por enquanto
-        } 
-        else if(opcode.compare("STORE")==0){
-
-        } 
-        else if(opcode.compare("READ")==0){
-
-        } 
-        else if(opcode.compare("WRITE")==0){
-
-        } 
-        else if(opcode.compare("COPY")==0){
-
-        } 
-        else if(opcode.compare("PUSH")==0){
-
-        } 
-        else if(opcode.compare("POP")==0){
-
-        } 
-        else if(opcode.compare("ADD")==0){
-
-        } 
-        else if(opcode.compare("SUB")==0){
-
-        }  
-        else if(opcode.compare("MUL")==0){
-
-        } 
-        else if(opcode.compare("DIV")==0){
-
-        } 
-        else if(opcode.compare("MOD")==0){
-
-        } 
-        else if(opcode.compare("AND")==0){
-
-        } 
-        else if(opcode.compare("OR")==0){
-
-        } 
-        else if(opcode.compare("NOT")==0){
-
-        } 
-        else if(opcode.compare("JUMP")==0){
-
-        } 
-        else if(opcode.compare("JZ")==0){
-
-        } 
-        else if(opcode.compare("JN")==0){
-
-        } 
-        else if(opcode.compare("CALL")==0){
-
-        }  
-        else if(opcode.compare("RET")==0){
 
         }
-        else{
-            std::cout<<"Instrucao nao encontrada.\n";
-        }*/ 
     }  
     *saida<<"tamanhoDoPrograma"<<" "<<"EnderecoDeCarregamento"<<" "<<"valorInicialDaPilha"<<" "<<"entryPointDoPrograma"<<"\n\n";
 }

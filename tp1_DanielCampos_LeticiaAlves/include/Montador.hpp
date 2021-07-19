@@ -11,13 +11,14 @@ class Montador{
     private:
         std::ifstream* entrada;
         std::ofstream* saida;
-        unsigned int PC;
+        unsigned int LC;
         std::map<std::string, int> tabelaDeSimbolos;
 
         std::string removeComentario(std::string instrucao);
         std::string getLabel(std::string& instrucao);
         std::string getOperacao(std::string& instrucao);
         std::string getOperando(std::string& instrucao);
+        void Montador::inserirNaTabelaDeSimbolos(std::string label);
 
         int getRegistrador(std::string registrador);
 
