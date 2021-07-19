@@ -23,7 +23,7 @@ void Montador::montar(){
 }
 
 void Montador::escreveCabecalhoArquivoSaida(){
-    *this->saida<<"MV-EXE\n\n";
+    *this->saida<<"MV-EXE";
     *saida<<std::endl;
     *saida<<std::endl;
 }
@@ -266,8 +266,7 @@ void Montador::passo1(){
             }
 
         }
-    }  
-    *saida<<"tamanhoDoPrograma"<<" "<<"EnderecoDeCarregamento"<<" "<<"valorInicialDaPilha"<<" "<<"entryPointDoPrograma"<<"\n\n";
+    } 
 }
 void Montador::passo2(){
 
