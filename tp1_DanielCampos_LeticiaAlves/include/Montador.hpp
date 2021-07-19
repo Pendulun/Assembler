@@ -30,6 +30,7 @@ class Montador{
 
         void passo1();
         void passo2();
+        void resetaLeituraArquivoEntrada();
 
         void escreveCabecalhoArquivoSaida();
         void escreveInformacoesArquivoSaida();

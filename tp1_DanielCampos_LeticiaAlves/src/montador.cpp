@@ -269,5 +269,15 @@ void Montador::passo1(){
     } 
 }
 void Montador::passo2(){
+    this->resetaLeituraArquivoEntrada();
+    //Para cada instrução lida
+    //Pega o opcode
+    //Pega os valores dos operandos
+    //Pede para imprimir no arquivo a instrução
+}
+
+void Montador::resetaLeituraArquivoEntrada(){
+    this->entrada->clear();
+    this->entrada->seekg(0);
 
 }
