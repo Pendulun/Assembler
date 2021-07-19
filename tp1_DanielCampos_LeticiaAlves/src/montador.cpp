@@ -35,6 +35,13 @@ void Montador::escreveInformacoesArquivoSaida(){
     *this->saida<<std::to_string(this->entryPoint).append(" ");
 }
 
+void Montador::escreveInstrucaoNoArquivoSaida(const std::string codigoOperacao, const std::list<std::string> operandos){
+    *this->saida<<codigoOperacao<<" ";
+    for(std::string operando : operandos){
+        *this->saida<<operando.append(" ");
+    }
+}
+
 //Devo tratar também o caso de coisas opcionais como comentários
 std::string Montador::removeComentario(std::string instrucao){
     std::string d_comentario = ";";

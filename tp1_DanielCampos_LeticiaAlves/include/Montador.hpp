@@ -5,6 +5,7 @@
 #include <fstream>
 #include <string>
 #include <map>
+#include <list>
 
 // TODO: structs, classes, e outras definições.
 class Montador{
@@ -23,7 +24,7 @@ class Montador{
         std::string getLabel(std::string& instrucao);
         std::string getOperacao(std::string& instrucao);
         std::string getOperando(std::string& instrucao);
-        void Montador::inserirNaTabelaDeSimbolos(std::string label);
+        void inserirNaTabelaDeSimbolos(std::string label);
 
         int getRegistrador(std::string registrador);
 
@@ -32,6 +33,8 @@ class Montador{
 
         void escreveCabecalhoArquivoSaida();
         void escreveInformacoesArquivoSaida();
+        void escreveInstrucaoNoArquivoSaida(const std::string, const  std::list<std::string>);
+
     public:
         Montador(std::ifstream& entrada, std::ofstream& saida);
         ~Montador();
