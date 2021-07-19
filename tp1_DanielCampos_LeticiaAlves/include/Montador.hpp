@@ -18,6 +18,7 @@ class Montador{
         unsigned int endCarregamento;
         unsigned int posAP;
         unsigned int entryPoint;
+        
         std::map<std::string, int> tabelaDeSimbolos;
 
         std::string removeComentario(std::string instrucao);

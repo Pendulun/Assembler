@@ -19,7 +19,6 @@ void Montador::montar(){
     this->escreveCabecalhoArquivoSaida();
 
     this->passo1();
-    this->escreveInformacoesArquivoSaida();
 }
 
 void Montador::escreveCabecalhoArquivoSaida(){
@@ -32,7 +31,9 @@ void Montador::escreveInformacoesArquivoSaida(){
     *this->saida<<std::to_string(this->tamanhoPrograma).append(" ");
     *this->saida<<std::to_string(this->endCarregamento).append(" ");
     *this->saida<<std::to_string(this->posAP).append(" ");
-    *this->saida<<std::to_string(this->entryPoint).append(" ");
+    *this->saida<<std::to_string(this->entryPoint);
+    *this->saida<<std::endl;
+    *this->saida<<std::endl;
 }
 
 void Montador::escreveInstrucaoNoArquivoSaida(const std::string codigoOperacao, const std::list<std::string> operandos){
@@ -91,7 +92,6 @@ std::string Montador::getOperacao(std::string& instrucao){
     for (unsigned int i=0; i<instrucao.length(); i++){
         if (instrucao[i] != ' '){
             inicio = i;
-
             break;    
         }
     }
@@ -101,14 +101,14 @@ std::string Montador::getOperacao(std::string& instrucao){
             fim = i;
             break;
         }
-        if (instrucao[i+1] == ' '){
+        else if (instrucao[i+1] == ' '){
             fim = i;
             break;    
         }
     }
 
-    operador = instrucao.substr(inicio, fim+1);
-    instrucao.erase(inicio, fim+1);
+    operador = instrucao.substr(inicio, fim+1-inicio);
+    instrucao.erase(inicio, fim+1-inicio);
 
     return operador;
 }
@@ -122,7 +122,6 @@ std::string Montador::getOperando(std::string& instrucao){
     for (unsigned int i=0; i<instrucao.length(); i++){
         if (instrucao[i] != ' '){
             inicio = i;
-
             break;    
         }
     }
@@ -138,8 +137,8 @@ std::string Montador::getOperando(std::string& instrucao){
         }
     }
 
-    operando = instrucao.substr(inicio, fim);
-    instrucao.erase(inicio, fim+1);
+    operando = instrucao.substr(inicio, fim+1-inicio);
+    instrucao.erase(inicio, fim+1-inicio);
 
     return operando;
 }
@@ -155,7 +154,7 @@ void Montador::inserirNaTabelaDeSimbolos(std::string label){
 }
 
 void Montador::imprimeNaTelaMensagem(const std::string mensagem, const std::string instrucao){
-    std::cout<<mensagem<<instrucao<<std::endl;
+    std::cout<<mensagem<<"."<<instrucao<<"."<<std::endl;
 
 }
 
@@ -168,6 +167,7 @@ void Montador::passo1(){
     //int operando2 = 0;
 
     while(!this->entrada->eof()){
+        opcode="";
         std::getline(*this->entrada, instrucao);        
 
         instrucao = removeComentario(instrucao);
@@ -190,7 +190,7 @@ void Montador::passo1(){
         /*for(auto elem : this->tabelaDeSimbolos){
             std::cout<<elem.first<<" "<<elem.second<<"\n";
         }*/
-
+            this->escreveInformacoesArquivoSaida();
             passo2();
             break;
         }
@@ -280,18 +280,153 @@ void Montador::passo2(){
     std::string opcode;
     int operando1 = 0;
     this->imprimeNaTelaMensagem("PASSO 2: ", "");
+    std::list<std::string> operandos;
+    std::string valorOperacao="";
     //Para cada instrução lida
     while(!this->entrada->eof()){
-        std::getline(*this->entrada, instrucao);        
+        std::getline(*this->entrada, instrucao);
+        operandos.clear();
+        valorOperacao="";        
 
         instrucao = removeComentario(instrucao);
         this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
+        
         label = getLabel(instrucao);
-
         opcode = getOperacao(instrucao);
 
-        //Pega os valores dos operandos
-        //Pede para imprimir no arquivo a instrução
+        //PSEUDO
+        std::cout<<"opcode: ."<<opcode<<"."<<std::endl;
+        if(opcode.compare("WORD")==0){
+            valorOperacao=getOperando(instrucao);
+            std::cout<<"Valor WORD: "<<valorOperacao<<std::endl;
+        }
+        else if(opcode.compare("END")==0){
+            break;
+        }
+        else{
+
+            //INSTRUCOES TABELADAS
+            if(opcode.compare("HALT")==0){
+                valorOperacao="0";
+                //Parada
+                this->LC++;
+            } 
+            else if(opcode.compare("LOAD")==0){ 
+                valorOperacao="1";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(getOperando(instrucao));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("STORE")==0){
+                valorOperacao="2";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(getOperando(instrucao));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("READ")==0){
+                valorOperacao="3";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("WRITE")==0){
+                valorOperacao="4";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("COPY")==0){
+                valorOperacao="5";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(getOperando(instrucao));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("PUSH")==0){
+                valorOperacao="6";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("POP")==0){
+                valorOperacao="7";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("ADD")==0){
+                valorOperacao="8";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("SUB")==0){
+                valorOperacao="9";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 3;
+            }  
+            else if(opcode.compare("MUL")==0){
+                valorOperacao="10";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("DIV")==0){
+                valorOperacao="11";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("MOD")==0){
+                valorOperacao="12";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("AND")==0){
+                valorOperacao="13";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("OR")==0){
+                valorOperacao="14";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 3;
+            } 
+            else if(opcode.compare("NOT")==0){
+                valorOperacao="15";
+                operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JUMP")==0){
+                valorOperacao="16";
+                operandos.push_back(getOperando(instrucao));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JZ")==0){
+                valorOperacao="17";
+                operandos.push_back(getOperando(instrucao));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JN")==0){
+                valorOperacao="18";
+                operandos.push_back(getOperando(instrucao));
+                this->LC += 2;
+            } 
+            else if(opcode.compare("CALL")==0){
+                valorOperacao="19";
+                operandos.push_back(getOperando(instrucao));
+                this->LC += 2;
+            }  
+            else if(opcode.compare("RET")==0){
+                valorOperacao="20";
+                this->LC++;
+            }
+            else{
+                std::cout<<"Instrucao nao encontrada.\n";
+            }
+
+        }
+
+        this->escreveInstrucaoNoArquivoSaida(valorOperacao, operandos);
     }
     
 }
