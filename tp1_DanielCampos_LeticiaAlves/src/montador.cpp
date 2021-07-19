@@ -154,6 +154,11 @@ void Montador::inserirNaTabelaDeSimbolos(std::string label){
     }
 }
 
+void Montador::imprimeNaTelaMensagem(const std::string mensagem, const std::string instrucao){
+    std::cout<<mensagem<<instrucao<<std::endl;
+
+}
+
 void Montador::passo1(){
     this->LC = 0;
     std::string instrucao;
@@ -166,13 +171,13 @@ void Montador::passo1(){
         std::getline(*this->entrada, instrucao);        
 
         instrucao = removeComentario(instrucao);
-        std::cout<<"A instrucao sem comentarios eh "<<instrucao<<std::endl;
+        this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
 
         label = getLabel(instrucao);
-        std::cout<<"O label eh "<<label<<std::endl;
+        this->imprimeNaTelaMensagem("O label eh ", label);
 
         opcode = getOperacao(instrucao);
-        std::cout<<"A operacao eh "<<opcode<<std::endl;
+        this->imprimeNaTelaMensagem("A operacao eh ", opcode);
         std::cout<<"\n";
 
         //PSEUDO
@@ -270,10 +275,25 @@ void Montador::passo1(){
 }
 void Montador::passo2(){
     this->resetaLeituraArquivoEntrada();
+    std::string instrucao;
+    std::string label;
+    std::string opcode;
+    int operando1 = 0;
+    this->imprimeNaTelaMensagem("PASSO 2: ", "");
     //Para cada instrução lida
-    //Pega o opcode
-    //Pega os valores dos operandos
-    //Pede para imprimir no arquivo a instrução
+    while(!this->entrada->eof()){
+        std::getline(*this->entrada, instrucao);        
+
+        instrucao = removeComentario(instrucao);
+        this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
+        label = getLabel(instrucao);
+
+        opcode = getOperacao(instrucao);
+
+        //Pega os valores dos operandos
+        //Pede para imprimir no arquivo a instrução
+    }
+    
 }
 
 void Montador::resetaLeituraArquivoEntrada(){

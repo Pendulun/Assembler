@@ -28,6 +28,8 @@ class Montador{
 
         int getRegistrador(std::string registrador);
 
+        void imprimeNaTelaMensagem(const std::string,const std::string);
+
         void passo1();
         void passo2();
         void resetaLeituraArquivoEntrada();
