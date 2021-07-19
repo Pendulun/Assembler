@@ -117,7 +117,7 @@ std::string Montador::getOperando(std::string& instrucao){
     }
 
     operando = instrucao.substr(inicio, fim);
-    instrucao.erase(inicio, fim);
+    instrucao.erase(inicio, fim+1);
 
     return operando;
 }
