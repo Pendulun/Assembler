@@ -11,7 +11,12 @@ class Montador{
     private:
         std::ifstream* entrada;
         std::ofstream* saida;
+        
         unsigned int LC;
+        unsigned int tamanhoPrograma;
+        unsigned int endCarregamento;
+        unsigned int posAP;
+        unsigned int entryPoint;
         std::map<std::string, int> tabelaDeSimbolos;
 
         std::string removeComentario(std::string instrucao);
@@ -24,6 +29,9 @@ class Montador{
 
         void passo1();
         void passo2();
+
+        void escreveCabecalhoArquivoSaida();
+        void escreveInformacoesArquivoSaida();
     public:
         Montador(std::ifstream& entrada, std::ofstream& saida);
         ~Montador();

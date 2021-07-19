@@ -1,9 +1,12 @@
 #include "Montador.hpp"
 
-// TODO: implementação do montador
 Montador::Montador(std::ifstream& entrada, std::ofstream& saida){
     this->entrada = &entrada;
     this->saida = &saida;
+    this->posAP=0;
+    this->tamanhoPrograma=0;
+    this->entryPoint=0;
+    this->endCarregamento=0;
 }
 
 Montador::~Montador(){
@@ -13,11 +16,23 @@ Montador::~Montador(){
 
 void Montador::montar(){
     //std::cout<<"Entrou no montar!\n";
-    *saida<<"MV-EXE\n\n";
-    //*saida<<std::endl;
-    //*saida<<std::endl;
+    this->escreveCabecalhoArquivoSaida();
 
     this->passo1();
+    this->escreveInformacoesArquivoSaida();
+}
+
+void Montador::escreveCabecalhoArquivoSaida(){
+    *this->saida<<"MV-EXE\n\n";
+    *saida<<std::endl;
+    *saida<<std::endl;
+}
+
+void Montador::escreveInformacoesArquivoSaida(){
+    *this->saida<<std::to_string(this->tamanhoPrograma).append(" ");
+    *this->saida<<std::to_string(this->endCarregamento).append(" ");
+    *this->saida<<std::to_string(this->posAP).append(" ");
+    *this->saida<<std::to_string(this->entryPoint).append(" ");
 }
 
 //Devo tratar também o caso de coisas opcionais como comentários
