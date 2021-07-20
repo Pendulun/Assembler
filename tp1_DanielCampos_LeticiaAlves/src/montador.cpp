@@ -48,7 +48,7 @@ void Montador::passo1(){
 
         //PSEUDO
         if(opcode.compare("WORD")==0){
-            this->inserirNaTabelaDeSimbolos(label,std::stoi(getOperando(instrucao)));
+            this->inserirNaTabelaDeSimbolosSeLabelNaoVazio(label,this->LC);
             this->LC++;
         }
         else if(opcode.compare("END")==0){
@@ -64,7 +64,7 @@ void Montador::passo1(){
         else{
 
             //INSTRUCOES TABELADAS
-            this->inserirNaTabelaDeSimbolos(label, this->LC);
+            this->inserirNaTabelaDeSimbolosSeLabelNaoVazio(label, this->LC);
 
             if(opcode.compare("HALT")==0){
                 //Parada
@@ -265,7 +265,7 @@ int Montador::getRegistrador(std::string registrador){
     return std::stoi(registrador.substr(1,1));
 }
 
-void Montador::inserirNaTabelaDeSimbolos(std::string label, int valor){
+void Montador::inserirNaTabelaDeSimbolosSeLabelNaoVazio(std::string label, int valor){
     if(label.compare("") != 0){
         this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, valor));
     }

@@ -25,7 +25,7 @@ class Montador{
         std::string getLabel(std::string& instrucao);
         std::string getOperacao(std::string& instrucao);
         std::string getOperando(std::string& instrucao);
-        void inserirNaTabelaDeSimbolos(std::string label, int valor);
+        void inserirNaTabelaDeSimbolosSeLabelNaoVazio(std::string label, int valor);
 
         int getRegistrador(std::string registrador);
 
