@@ -15,9 +15,7 @@ Montador::~Montador(){
 }
 
 void Montador::montar(){
-    //std::cout<<"Entrou no montar!\n";
     this->escreveCabecalhoArquivoSaida();
-
     this->passo1();
 }
 
@@ -25,6 +23,116 @@ void Montador::escreveCabecalhoArquivoSaida(){
     *this->saida<<"MV-EXE";
     *saida<<std::endl;
     *saida<<std::endl;
+}
+
+void Montador::passo1(){
+    this->LC = 0;
+    std::string instrucao;
+    std::string label;
+    std::string opcode;
+
+    while(!this->entrada->eof()){
+        opcode="";
+        std::getline(*this->entrada, instrucao);        
+
+        instrucao = removeComentario(instrucao);
+        this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
+
+        label = getLabel(instrucao);
+        this->imprimeNaTelaMensagem("O label eh ", label);
+
+        opcode = getOperacao(instrucao);
+        this->imprimeNaTelaMensagem("A operacao eh ", opcode);
+        std::cout<<"\n";
+
+        //PSEUDO
+        if(opcode.compare("WORD")==0){
+            this->inserirNaTabelaDeSimbolos(label,std::stoi(getOperando(instrucao)));
+        }
+        else if(opcode.compare("END")==0){
+
+        /*for(auto elem : this->tabelaDeSimbolos){
+            std::cout<<elem.first<<" "<<elem.second<<"\n";
+        }*/
+            this->escreveInformacoesArquivoSaida();
+            passo2();
+            break;
+        }
+        else{
+
+            //INSTRUCOES TABELADAS
+            this->inserirNaTabelaDeSimbolos(label, this->LC);
+
+            if(opcode.compare("HALT")==0){
+                //Parada
+                this->LC++;
+            } 
+            else if(opcode.compare("LOAD")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("STORE")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("READ")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("WRITE")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("COPY")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("PUSH")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("POP")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("ADD")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("SUB")==0){
+                this->LC += 3;
+            }  
+            else if(opcode.compare("MUL")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("DIV")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("MOD")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("AND")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("OR")==0){
+                this->LC += 3;
+            } 
+            else if(opcode.compare("NOT")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JUMP")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JZ")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("JN")==0){
+                this->LC += 2;
+            } 
+            else if(opcode.compare("CALL")==0){
+                this->LC += 2;
+            }  
+            else if(opcode.compare("RET")==0){
+                this->LC++;
+            }
+            else{
+                std::cout<<"Instrucao nao encontrada.\n";
+            }
+
+        }
+    } 
 }
 
 void Montador::escreveInformacoesArquivoSaida(){
@@ -147,9 +255,9 @@ int Montador::getRegistrador(std::string registrador){
     return std::stoi(registrador.substr(1,1));
 }
 
-void Montador::inserirNaTabelaDeSimbolos(std::string label){
+void Montador::inserirNaTabelaDeSimbolos(std::string label, int valor){
     if(label.compare("") != 0){
-        this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, this->LC));
+        this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, valor));
     }
 }
 
@@ -158,121 +266,6 @@ void Montador::imprimeNaTelaMensagem(const std::string mensagem, const std::stri
 
 }
 
-void Montador::passo1(){
-    this->LC = 0;
-    std::string instrucao;
-    std::string label;
-    std::string opcode;
-    int operando1 = 0;
-    //int operando2 = 0;
-
-    while(!this->entrada->eof()){
-        opcode="";
-        std::getline(*this->entrada, instrucao);        
-
-        instrucao = removeComentario(instrucao);
-        this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
-
-        label = getLabel(instrucao);
-        this->imprimeNaTelaMensagem("O label eh ", label);
-
-        opcode = getOperacao(instrucao);
-        this->imprimeNaTelaMensagem("A operacao eh ", opcode);
-        std::cout<<"\n";
-
-        //PSEUDO
-        if(opcode.compare("WORD")==0){
-            operando1 = std::stoi(getOperando(instrucao));
-            this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, operando1));
-        }
-        else if(opcode.compare("END")==0){
-
-        /*for(auto elem : this->tabelaDeSimbolos){
-            std::cout<<elem.first<<" "<<elem.second<<"\n";
-        }*/
-            this->escreveInformacoesArquivoSaida();
-            passo2();
-            break;
-        }
-        else{
-
-            //INSTRUCOES TABELADAS
-            this->inserirNaTabelaDeSimbolos(label);
-
-            if(opcode.compare("HALT")==0){
-                //Parada
-                this->LC++;
-            } 
-            else if(opcode.compare("LOAD")==0){
-                //Carrega Registrador 
-                //operando1 = getRegistrador(getOperando(instrucao));
-                //operando2 = std::stoi(getOperando(instrucao));
-                this->LC += 3;
-            } 
-            else if(opcode.compare("STORE")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("READ")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("WRITE")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("COPY")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("PUSH")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("POP")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("ADD")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("SUB")==0){
-                this->LC += 3;
-            }  
-            else if(opcode.compare("MUL")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("DIV")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("MOD")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("AND")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("OR")==0){
-                this->LC += 3;
-            } 
-            else if(opcode.compare("NOT")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("JUMP")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("JZ")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("JN")==0){
-                this->LC += 2;
-            } 
-            else if(opcode.compare("CALL")==0){
-                this->LC += 2;
-            }  
-            else if(opcode.compare("RET")==0){
-                this->LC++;
-            }
-            else{
-                std::cout<<"Instrucao nao encontrada.\n";
-            }
-
-        }
-    } 
-}
 void Montador::passo2(){
     this->resetaLeituraArquivoEntrada();
     std::string instrucao;
