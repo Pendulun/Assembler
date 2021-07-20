@@ -35,6 +35,7 @@ class Montador{
         void passo2();
         void resetaLeituraArquivoEntrada();
 
+        void defineInformacoesArquivoSaida();
         void escreveCabecalhoArquivoSaida();
         void escreveInformacoesArquivoSaida();
         void escreveInstrucaoNoArquivoSaida(const std::string, const  std::list<std::string>);

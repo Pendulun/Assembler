@@ -7,6 +7,7 @@ Montador::Montador(std::ifstream& entrada, std::ofstream& saida){
     this->tamanhoPrograma=0;
     this->entryPoint=0;
     this->endCarregamento=0;
+    this->LC=0;
 }
 
 Montador::~Montador(){
@@ -48,12 +49,14 @@ void Montador::passo1(){
         //PSEUDO
         if(opcode.compare("WORD")==0){
             this->inserirNaTabelaDeSimbolos(label,std::stoi(getOperando(instrucao)));
+            this->LC++;
         }
         else if(opcode.compare("END")==0){
 
         /*for(auto elem : this->tabelaDeSimbolos){
             std::cout<<elem.first<<" "<<elem.second<<"\n";
         }*/
+            this->defineInformacoesArquivoSaida();
             this->escreveInformacoesArquivoSaida();
             passo2();
             break;
@@ -133,6 +136,13 @@ void Montador::passo1(){
 
         }
     } 
+}
+
+void Montador::defineInformacoesArquivoSaida(){
+    this->tamanhoPrograma = this->LC;
+    this->endCarregamento=0;
+    this->posAP = this->endCarregamento + this->tamanhoPrograma + 1000;
+
 }
 
 void Montador::escreveInformacoesArquivoSaida(){
