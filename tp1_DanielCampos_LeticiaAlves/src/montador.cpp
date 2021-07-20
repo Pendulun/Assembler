@@ -6,6 +6,7 @@ Montador::Montador(std::ifstream& entrada, std::ofstream& saida){
     this->posAP=0;
     this->tamanhoPrograma=0;
     this->entryPoint=0;
+    this->definiuEntryPoint = false;
     this->endCarregamento=0;
     this->LC=0;
 }
@@ -18,12 +19,13 @@ Montador::~Montador(){
 void Montador::montar(){
     this->escreveCabecalhoArquivoSaida();
     this->passo1();
+    std::cout<<"Fim Assembler\n";
 }
 
 void Montador::escreveCabecalhoArquivoSaida(){
-    *this->saida<<"MV-EXE";
-    *saida<<std::endl;
-    *saida<<std::endl;
+    (*this->saida)<<"MV-EXE";
+    (*this->saida)<<std::endl;
+    (*this->saida)<<std::endl;
 }
 
 void Montador::imprimirTabelaDeSimbolos(){
@@ -69,6 +71,8 @@ void Montador::passo1(){
 
             //INSTRUCOES TABELADAS
             this->inserirNaTabelaDeSimbolosSeLabelNaoVazio(label, this->LC);
+            std::cout<<"Valor LC: "<<this->LC<<std::endl;
+            this->verificaEDefineEntryPoint();
 
             if(opcode.compare("HALT")==0){
                 //Parada
@@ -441,6 +445,14 @@ void Montador::passo2(){
     
 }
 
+void Montador::verificaEDefineEntryPoint(){
+    if(!this->definiuEntryPoint){
+        this->entryPoint = this->LC;
+        this->definiuEntryPoint=true;
+        std::cout<<"Definiu EntryPoint para: "<<this->entryPoint<<std::endl;
+    }
+}
+
 std::string Montador::getValorOperandoMemoriaVerificandoTabelaSimbolos(std::string instrucao){
     //Pegar operando
     std::string valorASerImpresso = "";
@@ -452,11 +464,13 @@ std::string Montador::getValorOperandoMemoriaVerificandoTabelaSimbolos(std::stri
 
     //Se estiver, calcular posição a ser impressa
     if (it != this->tabelaDeSimbolos.end()){
-        std::cout<<"Operando de Memória está na tabela de símbolos!\n";
+        std::cout<<"Operando de Memoria esta na tabela de simbolos!\n";
         //Essa variável é necessária porcausa de algum erro na hora de realizar a 
         //subtração de um unsigned int menor do que outro unsigned int causando underflow
         int enderecoRelativo = it->second - this->LC;
         valorASerImpresso = std::to_string(enderecoRelativo);
+        std::cout<<"Endereco operando: "<<it->second;
+        std::cout<<" LC atual: "<<this->LC<<std::endl;
         std::cout<<"Valor a ser impresso calculado: "<<valorASerImpresso<<std::endl;
     }else{
         valorASerImpresso = operandoMemoria;

@@ -19,6 +19,7 @@ class Montador{
         unsigned int endCarregamento;
         unsigned int posAP;
         unsigned int entryPoint;
+        bool definiuEntryPoint;
         
         std::map<std::string, unsigned int> tabelaDeSimbolos;
 
@@ -37,6 +38,7 @@ class Montador{
         void passo2();
         void resetaLeituraArquivoEntrada();
 
+        void verificaEDefineEntryPoint();
         void defineInformacoesArquivoSaida();
         void escreveCabecalhoArquivoSaida();
         void escreveInformacoesArquivoSaida();
