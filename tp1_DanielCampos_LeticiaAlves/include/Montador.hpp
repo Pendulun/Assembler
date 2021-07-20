@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <iterator>
 
 // TODO: structs, classes, e outras definições.
 class Montador{
@@ -30,6 +31,7 @@ class Montador{
         int getRegistrador(std::string registrador);
 
         void imprimeNaTelaMensagem(const std::string,const std::string);
+        void imprimirTabelaDeSimbolos();
 
         void passo1();
         void passo2();

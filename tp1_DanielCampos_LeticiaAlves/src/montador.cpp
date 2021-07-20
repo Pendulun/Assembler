@@ -26,6 +26,12 @@ void Montador::escreveCabecalhoArquivoSaida(){
     *saida<<std::endl;
 }
 
+void Montador::imprimirTabelaDeSimbolos(){
+    for (std::map<std::string, int>::iterator it=this->tabelaDeSimbolos.begin(); it!=this->tabelaDeSimbolos.end(); ++it)
+        std::cout << it->first << " => " << it->second << '\n';
+}
+
+
 void Montador::passo1(){
     this->LC = 0;
     std::string instrucao;
@@ -58,6 +64,8 @@ void Montador::passo1(){
         }*/
             this->defineInformacoesArquivoSaida();
             this->escreveInformacoesArquivoSaida();
+            std::cout<<"TABELA DE SIMBOLOS PASSO 1\n";
+            this->imprimirTabelaDeSimbolos();
             passo2();
             break;
         }
