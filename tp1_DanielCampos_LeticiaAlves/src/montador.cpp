@@ -27,7 +27,7 @@ void Montador::escreveCabecalhoArquivoSaida(){
 }
 
 void Montador::imprimirTabelaDeSimbolos(){
-    for (std::map<std::string, int>::iterator it=this->tabelaDeSimbolos.begin(); it!=this->tabelaDeSimbolos.end(); ++it)
+    for (std::map<std::string, unsigned int>::iterator it=this->tabelaDeSimbolos.begin(); it!=this->tabelaDeSimbolos.end(); ++it)
         std::cout << it->first << " => " << it->second << '\n';
 }
 
@@ -58,10 +58,6 @@ void Montador::passo1(){
             this->LC++;
         }
         else if(opcode.compare("END")==0){
-
-        /*for(auto elem : this->tabelaDeSimbolos){
-            std::cout<<elem.first<<" "<<elem.second<<"\n";
-        }*/
             this->defineInformacoesArquivoSaida();
             this->escreveInformacoesArquivoSaida();
             std::cout<<"TABELA DE SIMBOLOS PASSO 1\n";
@@ -273,9 +269,9 @@ int Montador::getRegistrador(std::string registrador){
     return std::stoi(registrador.substr(1,1));
 }
 
-void Montador::inserirNaTabelaDeSimbolosSeLabelNaoVazio(std::string label, int valor){
+void Montador::inserirNaTabelaDeSimbolosSeLabelNaoVazio(std::string label, unsigned int valor){
     if(label.compare("") != 0){
-        this->tabelaDeSimbolos.insert(std::pair<std::string, int>(label, valor));
+        this->tabelaDeSimbolos.insert(std::pair<std::string, unsigned int>(label, valor));
     }
 }
 
@@ -289,15 +285,15 @@ void Montador::passo2(){
     std::string instrucao;
     std::string label;
     std::string opcode;
-    int operando1 = 0;
     this->imprimeNaTelaMensagem("PASSO 2: ", "");
+    this->LC = 0;
     std::list<std::string> operandos;
     std::string valorOperacao="";
     //Para cada instrução lida
     while(!this->entrada->eof()){
         std::getline(*this->entrada, instrucao);
         operandos.clear();
-        valorOperacao="";        
+        valorOperacao="";       
 
         instrucao = removeComentario(instrucao);
         this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
@@ -325,14 +321,16 @@ void Montador::passo2(){
             else if(opcode.compare("LOAD")==0){ 
                 valorOperacao="1";
                 operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
-                operandos.push_back(getOperando(instrucao));
                 this->LC += 3;
+                operandos.push_back(this->getValorOperandoMemoriaVerificandoTabelaSimbolos(instrucao));
+                
             } 
             else if(opcode.compare("STORE")==0){
                 valorOperacao="2";
                 operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
-                operandos.push_back(getOperando(instrucao));
                 this->LC += 3;
+                operandos.push_back(this->getValorOperandoMemoriaVerificandoTabelaSimbolos(instrucao));
+                
             } 
             else if(opcode.compare("READ")==0){
                 valorOperacao="3";
@@ -409,23 +407,24 @@ void Montador::passo2(){
             } 
             else if(opcode.compare("JUMP")==0){
                 valorOperacao="16";
-                operandos.push_back(getOperando(instrucao));
                 this->LC += 2;
+                operandos.push_back(this->getValorOperandoMemoriaVerificandoTabelaSimbolos(instrucao));
+                
             } 
             else if(opcode.compare("JZ")==0){
                 valorOperacao="17";
-                operandos.push_back(getOperando(instrucao));
                 this->LC += 2;
+                operandos.push_back(this->getValorOperandoMemoriaVerificandoTabelaSimbolos(instrucao));
             } 
             else if(opcode.compare("JN")==0){
                 valorOperacao="18";
-                operandos.push_back(getOperando(instrucao));
                 this->LC += 2;
+                operandos.push_back(this->getValorOperandoMemoriaVerificandoTabelaSimbolos(instrucao));
             } 
             else if(opcode.compare("CALL")==0){
                 valorOperacao="19";
-                operandos.push_back(getOperando(instrucao));
                 this->LC += 2;
+                operandos.push_back(this->getValorOperandoMemoriaVerificandoTabelaSimbolos(instrucao));
             }  
             else if(opcode.compare("RET")==0){
                 valorOperacao="20";
@@ -441,6 +440,31 @@ void Montador::passo2(){
     }
     
 }
+
+std::string Montador::getValorOperandoMemoriaVerificandoTabelaSimbolos(std::string instrucao){
+    //Pegar operando
+    std::string valorASerImpresso = "";
+    std::string operandoMemoria = this->getOperando(instrucao);
+
+    //Verificar se está na tabela de símbolos
+    std::map<std::string, unsigned int>::iterator it;
+    it = this->tabelaDeSimbolos.find(operandoMemoria);
+
+    //Se estiver, calcular posição a ser impressa
+    if (it != this->tabelaDeSimbolos.end()){
+        std::cout<<"Operando de Memória está na tabela de símbolos!\n";
+        //Essa variável é necessária porcausa de algum erro na hora de realizar a 
+        //subtração de um unsigned int menor do que outro unsigned int causando underflow
+        int enderecoRelativo = it->second - this->LC;
+        valorASerImpresso = std::to_string(enderecoRelativo);
+        std::cout<<"Valor a ser impresso calculado: "<<valorASerImpresso<<std::endl;
+    }else{
+        valorASerImpresso = operandoMemoria;
+    }
+
+    return valorASerImpresso;
+}
+ 
 
 void Montador::resetaLeituraArquivoEntrada(){
     this->entrada->clear();

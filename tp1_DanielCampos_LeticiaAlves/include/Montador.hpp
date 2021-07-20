@@ -20,14 +20,14 @@ class Montador{
         unsigned int posAP;
         unsigned int entryPoint;
         
-        std::map<std::string, int> tabelaDeSimbolos;
+        std::map<std::string, unsigned int> tabelaDeSimbolos;
 
         std::string removeComentario(std::string instrucao);
         std::string getLabel(std::string& instrucao);
         std::string getOperacao(std::string& instrucao);
         std::string getOperando(std::string& instrucao);
-        void inserirNaTabelaDeSimbolosSeLabelNaoVazio(std::string label, int valor);
-
+        void inserirNaTabelaDeSimbolosSeLabelNaoVazio(std::string label, unsigned int valor);
+        std::string getValorOperandoMemoriaVerificandoTabelaSimbolos(std::string instrucao);
         int getRegistrador(std::string registrador);
 
         void imprimeNaTelaMensagem(const std::string,const std::string);
