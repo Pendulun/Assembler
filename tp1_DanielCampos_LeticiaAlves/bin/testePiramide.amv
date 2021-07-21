@@ -1,0 +1,26 @@
+; Esse programa recebe um número e imprime de 0 a esse número e, depois desse número até zero
+CONST0: WORD 0
+CONST1: WORD 1
+INICIO:                                                 READ        R0  ;Esse é um comentario
+        LOAD R1 CONST1
+        LOAD R2 CONST0
+        LOAD R3 CONST0
+        JUMP IMPRIMEATETOPO
+
+IMPRIMEATETOPO: WRITE R2
+                ADD R2 R1
+                PUSH R2
+                SUB R2 R0
+                POP R2
+                JZ  IMPRIMEATEZERO
+                JUMP IMPRIMEATETOPO
+
+IMPRIMEATEZERO: WRITE R2 
+                SUB R2 R1
+                JN FIM
+                JUMP IMPRIMEATEZERO
+
+FIM:    END
+
+
+
