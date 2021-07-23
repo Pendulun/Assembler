@@ -1,7 +1,7 @@
 ; Esse programa recebe um número e imprime de 0 a esse número e, depois desse número até zero
 CONST0: WORD 0
 CONST1: WORD 1
-INICIO:                                                 READ        R0  ;Esse é um comentario
+INICIO: READ        R0  ;Esse é um comentario
         LOAD R1 CONST1
         LOAD R2 CONST0
         LOAD R3 CONST0
@@ -20,4 +20,5 @@ IMPRIMEATEZERO: WRITE R2
                 JN FIM
                 JUMP IMPRIMEATEZERO
 
-FIM:    END
+FIM: HALT    
+END
