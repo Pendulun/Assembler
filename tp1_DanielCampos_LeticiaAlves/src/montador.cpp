@@ -29,8 +29,10 @@ void Montador::escreveCabecalhoArquivoSaida(){
 }
 
 void Montador::imprimirTabelaDeSimbolos(){
-    for (std::map<std::string, unsigned int>::iterator it=this->tabelaDeSimbolos.begin(); it!=this->tabelaDeSimbolos.end(); ++it)
+    for (std::map<std::string, unsigned int>::iterator it=this->tabelaDeSimbolos.begin(); it!=this->tabelaDeSimbolos.end(); ++it){
         std::cout << it->first << " => " << it->second << '\n';
+    }
+    std::cout<<std::endl;
 }
 
 
@@ -57,11 +59,12 @@ void Montador::passo1(){
 
             opcode = getOperacao(instrucao);
             this->imprimeNaTelaMensagem("A operacao eh ", opcode);
-            std::cout<<"\n";
 
+            this->imprimeNaTelaMensagem("Valor LC inicial: ",std::to_string(this->LC));
+
+            this->inserirNaTabelaDeSimbolosSeLabelNaoVazio(label,this->LC);
             //PSEUDO
             if(opcode.compare("WORD")==0){
-                this->inserirNaTabelaDeSimbolosSeLabelNaoVazio(label,this->LC);
                 this->LC++;
             }
             else if(opcode.compare("END")==0){
@@ -75,8 +78,6 @@ void Montador::passo1(){
             else{
 
                 //INSTRUCOES TABELADAS
-                this->inserirNaTabelaDeSimbolosSeLabelNaoVazio(label, this->LC);
-                std::cout<<"Valor LC: "<<this->LC<<std::endl;
                 this->verificaEDefineEntryPoint();
 
                 if(opcode.compare("HALT")==0){
@@ -148,9 +149,12 @@ void Montador::passo1(){
                 }
 
             }
+            this->imprimeNaTelaMensagem("Valor LC final: ",std::to_string(this->LC));
         }else{
-            std::cout<<"LINHA EH VAZIA!\n\n";
+            //this->LC++;
+            std::cout<<"LINHA EH VAZIA!\n";
         }
+        std::cout<<std::endl;
     } 
 }
 
@@ -171,6 +175,11 @@ void Montador::escreveInformacoesArquivoSaida(){
 }
 
 void Montador::escreveInstrucaoNoArquivoSaida(const std::string codigoOperacao, const std::list<std::string> operandos){
+    std::cout<<"ESCREVENDO: "<<codigoOperacao<<" ";
+    for(std::string operando : operandos){
+        std::cout<<operando<<" ";
+    }
+    std::cout<<"\n";
     *this->saida<<codigoOperacao<<" ";
     for(std::string operando : operandos){
         *this->saida<<operando.append(" ");
@@ -320,6 +329,10 @@ int Montador::getRegistrador(std::string registrador){
 
 void Montador::inserirNaTabelaDeSimbolosSeLabelNaoVazio(std::string label, unsigned int valor){
     if(label.compare("") != 0){
+        std::string msg = "Inserindo ";
+        msg+=label;
+        msg+=" na TS com valor: ";
+        this->imprimeNaTelaMensagem(msg, std::to_string(valor));
         this->tabelaDeSimbolos.insert(std::pair<std::string, unsigned int>(label, valor));
     }
 }
@@ -343,10 +356,11 @@ void Montador::passo2(){
         std::getline(*this->entrada, instrucao);
 
         instrucao = removeComentario(instrucao);
-        this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
+        //this->imprimeNaTelaMensagem("A instrucao sem comentarios eh ", instrucao);
 
         instrucao = this->removeEspacosETabs(instrucao);
-        this->imprimeNaTelaMensagem("LINHA SEM MUITOS ESPACOS E TABS", instrucao);
+        //this->imprimeNaTelaMensagem("LINHA SEM MUITOS ESPACOS E TABS ", instrucao);
+        this->imprimeNaTelaMensagem("Instrucao Lida: ",instrucao);
 
         if(instrucao.compare("") != 0){
             operandos.clear();
@@ -356,8 +370,13 @@ void Montador::passo2(){
             opcode = getOperacao(instrucao);
 
             //PSEUDO
-            std::cout<<"opcode: ."<<opcode<<"."<<std::endl;
+            this->imprimeNaTelaMensagem("label:", label);
+            this->imprimeNaTelaMensagem("opcode:", opcode);
+
+            this->imprimeNaTelaMensagem("Valor LC inicial: ",std::to_string(this->LC));
+
             if(opcode.compare("WORD")==0){
+                this->LC++;
                 valorOperacao=getOperando(instrucao);
                 std::cout<<"Valor WORD: "<<valorOperacao<<std::endl;
             }
@@ -490,6 +509,10 @@ void Montador::passo2(){
 
             }
             this->escreveInstrucaoNoArquivoSaida(valorOperacao, operandos);
+            this->imprimeNaTelaMensagem("Valor LC final: ",std::to_string(this->LC));
+            std::cout<<"\n\n";
+        }else{
+            //this->LC++;
         }
     }
 }
@@ -503,23 +526,20 @@ void Montador::verificaEDefineEntryPoint(){
 }
 
 std::string Montador::getValorOperandoMemoriaVerificandoTabelaSimbolos(std::string instrucao){
-    //Pegar operando
     std::string valorASerImpresso = "";
     std::string operandoMemoria = this->getOperando(instrucao);
 
-    //Verificar se está na tabela de símbolos
     std::map<std::string, unsigned int>::iterator it;
     it = this->tabelaDeSimbolos.find(operandoMemoria);
 
-    //Se estiver, calcular posição a ser impressa
     if (it != this->tabelaDeSimbolos.end()){
         std::cout<<"Operando de Memoria esta na tabela de simbolos!\n";
         //Essa variável é necessária porcausa de algum erro na hora de realizar a 
         //subtração de um unsigned int menor do que outro unsigned int causando underflow
-        int enderecoRelativo = it->second - this->LC;
+        int enderecoRelativo = it->second - (this->LC);
         valorASerImpresso = std::to_string(enderecoRelativo);
         std::cout<<"Endereco operando: "<<it->second;
-        std::cout<<" LC atual: "<<this->LC<<std::endl;
+        std::cout<<" LC operando memoria: "<<this->LC<<std::endl;
         std::cout<<"Valor a ser impresso calculado: "<<valorASerImpresso<<std::endl;
     }else{
         valorASerImpresso = operandoMemoria;
