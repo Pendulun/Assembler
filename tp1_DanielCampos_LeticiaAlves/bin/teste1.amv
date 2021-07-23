@@ -1,3 +1,4 @@
+;Esse programa lê um número e o imprime somado de 100
 READ R0
 LOAD R1 const100
 ADD R0 R1

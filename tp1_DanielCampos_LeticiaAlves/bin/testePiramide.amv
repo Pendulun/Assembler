@@ -1,4 +1,4 @@
-; Esse programa recebe um número e imprime de 0 a esse número e, depois desse número até zero
+; Esse programa recebe um número positivo e imprime de 0 a esse número e, depois desse número até zero
 CONST0: WORD 0
 CONST1: WORD 1
 INICIO: READ        R0  ;Esse é um comentario
