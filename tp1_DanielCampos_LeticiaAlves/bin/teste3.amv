@@ -1,3 +1,4 @@
+;Esse programa lê um número e imprime ele somado de 300
 const100: WORD 100
 const200: WORD 200
 READ R0
