@@ -161,7 +161,7 @@ void Montador::passo1(){
 void Montador::defineInformacoesArquivoSaida(){
     this->tamanhoPrograma = this->LC;
     this->endCarregamento=0;
-    this->posAP = this->endCarregamento + this->tamanhoPrograma + 1000;
+    this->posAP = this->endCarregamento + this->tamanhoPrograma + this->TAMANHOPILHA;
 
 }
 

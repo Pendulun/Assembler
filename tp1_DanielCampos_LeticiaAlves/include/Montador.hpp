@@ -14,6 +14,7 @@ class Montador{
         std::ifstream* entrada;
         std::ofstream* saida;
         
+        const unsigned int TAMANHOPILHA = 1000;
         unsigned int LC;
         unsigned int tamanhoPrograma;
         unsigned int endCarregamento;
