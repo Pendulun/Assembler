@@ -214,6 +214,10 @@ std::string Montador::removeEspacosETabs(std::string instrucao){
         }
     }
 
+    if(instrucao.compare(SPACE)==0){
+        instrucao="";
+    }
+
     return instrucao;
 }
 
