@@ -158,7 +158,7 @@ void Montador::passo1(){
     std::cout<<"TABELA DE SIMBOLOS PASSO 1\n";
     this->imprimirTabelaDeSimbolos();
     passo2();
-    
+    std::cout<<"Fim Assembler com sucesso!\n";
 }
 
 void Montador::defineInformacoesArquivoSaida(){
