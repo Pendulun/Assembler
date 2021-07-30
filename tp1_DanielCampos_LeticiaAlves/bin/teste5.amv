@@ -1,0 +1,11 @@
+;Programa que lê um número e faz a seguinte conta: (NUM+1)*2
+NUMERO: WORD 1
+MAIN:   READ R2
+        LOAD R3 NUMERO
+        ADD R2 R3
+        STORE R2 NUMERO
+        LOAD R3 NUMERO
+        ADD R2 R3
+        WRITE R2
+        HALT
+        END
