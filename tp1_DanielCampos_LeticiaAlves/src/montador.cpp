@@ -425,7 +425,7 @@ void Montador::passo2(){
                 else if(opcode.compare("COPY")==0){
                     valorOperacao="5";
                     operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
-                    operandos.push_back(getOperando(instrucao));
+                    operandos.push_back(std::to_string(getRegistrador(getOperando(instrucao))));
                     this->LC += 3;
                 } 
                 else if(opcode.compare("PUSH")==0){
