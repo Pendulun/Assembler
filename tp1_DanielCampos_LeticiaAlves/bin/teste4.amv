@@ -1,0 +1,22 @@
+;Programa que faz a seguinte conta: ((10*3)/2)%4 = 3 e imprime seu resultado
+const2: WORD 2
+
+MAIN:   CALL doStuff
+        WRITE R2
+        HALT
+        END
+
+const3: WORD 3
+const4: WORD 4
+
+
+doStuff:    LOAD R2 const10
+            LOAD R3 const3
+            MUL R2 R3
+            LOAD R3 const2
+            DIV R2 R3
+            LOAD R3 const4
+            MOD R2 R3
+            RET
+
+const10: WORD 10

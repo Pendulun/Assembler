@@ -19,7 +19,6 @@ Montador::~Montador(){
 void Montador::montar(){
     this->escreveCabecalhoArquivoSaida();
     this->passo1();
-    std::cout<<"Fim Assembler\n";
 }
 
 void Montador::escreveCabecalhoArquivoSaida(){
@@ -68,12 +67,8 @@ void Montador::passo1(){
                 this->LC++;
             }
             else if(opcode.compare("END")==0){
-                this->defineInformacoesArquivoSaida();
-                this->escreveInformacoesArquivoSaida();
-                std::cout<<"TABELA DE SIMBOLOS PASSO 1\n";
-                this->imprimirTabelaDeSimbolos();
-                passo2();
-                break;
+                //Não faz nada
+                continue;
             }
             else{
 
@@ -155,7 +150,15 @@ void Montador::passo1(){
             std::cout<<"LINHA EH VAZIA!\n";
         }
         std::cout<<std::endl;
-    } 
+    }
+
+    //Passo 2 
+    this->defineInformacoesArquivoSaida();
+    this->escreveInformacoesArquivoSaida();
+    std::cout<<"TABELA DE SIMBOLOS PASSO 1\n";
+    this->imprimirTabelaDeSimbolos();
+    passo2();
+    
 }
 
 void Montador::defineInformacoesArquivoSaida(){
@@ -385,7 +388,7 @@ void Montador::passo2(){
                 std::cout<<"Valor WORD: "<<valorOperacao<<std::endl;
             }
             else if(opcode.compare("END")==0){
-                break;
+                continue;
             }
             else{
 
